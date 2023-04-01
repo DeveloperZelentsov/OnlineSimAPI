@@ -47,6 +47,10 @@ public enum OnlineSimError: String, LocalizedError, CaseIterable {
     case errorNoTzid = "ERROR_NO_TZID"
     case errorNoOperations = "ERROR_NO_OPERATIONS"
     case accountIdentificationRequired = "ACCOUNT_IDENTIFICATION_REQUIRED"
+    case noCodeReceived = "NO_CODE_RECEIVED"
+    case operationNotFound = "OPERATION_NOT_FOUND"
+    case badAnswer = "BAD_ANSWER"
+    case operationCancelled = "OPERATION_CANCELLED"
     
     public init?(rawValue: String) {
         switch rawValue {
@@ -76,6 +80,10 @@ public enum OnlineSimError: String, LocalizedError, CaseIterable {
         case "ERROR_NO_TZID": self = .errorNoTzid
         case "ERROR_NO_OPERATIONS": self = .errorNoOperations
         case "ACCOUNT_IDENTIFICATION_REQUIRED": self = .accountIdentificationRequired
+        case "NO_CODE_RECEIVED": self = .noCodeReceived
+        case "OPERATION_NOT_FOUND": self = .operationNotFound
+        case "BAD_ANSWER": self = .badAnswer
+        case "OPERATION_CANCELLED": self = .operationCancelled
         default: return nil
         }
     }
@@ -108,6 +116,10 @@ public enum OnlineSimError: String, LocalizedError, CaseIterable {
         case .errorNoTzid: return "Tzid is not specified."
         case .errorNoOperations: return "No operations."
         case .accountIdentificationRequired: return "You have to go through an identification process: to order a messenger - in any way, for forward - on the passport."
+        case .noCodeReceived: return "No code has been received."
+        case .operationNotFound: return "Operation not found."
+        case .badAnswer: return "Bad answer received."
+        case .operationCancelled: return "Operation has been cancelled."
         }
     }
 }

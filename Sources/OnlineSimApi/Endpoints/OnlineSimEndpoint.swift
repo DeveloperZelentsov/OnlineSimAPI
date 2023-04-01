@@ -12,6 +12,8 @@ public enum OnlineSimEndpoint {
     case getNumbersStats(GetStatsCountry?)
     case getNumber(GetOnlineSimNumberRequest)
     case getState(GetOnlineSimStateRequest)
+    case setOperationRevise(SetOperationReviseRequest)
+    case setOperationOk(SetOperationOkRequest)
 }
 
 extension OnlineSimEndpoint: CustomEndpoint {
@@ -44,7 +46,7 @@ extension OnlineSimEndpoint: CustomEndpoint {
                 items.append(.init(name: "country", value: country.description))
             }
             if let reject = request.reject {
-                let rejectString = reject.map { String($0) }.joined(separator: ",")
+                let rejectString = reject.map { $0.description }.joined(separator: ",")
                 items.append(.init(name: "reject", value: rejectString))
             }
             if let ext = request.ext {
@@ -58,22 +60,28 @@ extension OnlineSimEndpoint: CustomEndpoint {
             }
         case .getState(let request):
             if let tzid = request.operationId {
-                items.append(.init(name: "tzid", value: String(tzid)))
+                items.append(.init(name: "tzid", value: tzid.description))
             }
-            if let messageToCode = request.extractCodeOnly {
-                items.append(.init(name: "message_to_code", value: String(messageToCode)))
-            }
+            items.append(.init(name: "message_to_code", value: request.extractCodeOnly.description))
+            
             if let form = request.receptionType {
-                items.append(.init(name: "form", value: String(form)))
+                items.append(.init(name: "form", value: form.description))
             }
             if let orderby = request.sortOrder {
                 items.append(.init(name: "orderby", value: orderby))
             }
             if let msgList = request.messageType {
-                items.append(.init(name: "msg_list", value: String(msgList)))
+                items.append(.init(name: "msg_list", value: msgList.description))
             }
             if let clean = request.excludeCircularMessages {
-                items.append(.init(name: "clean", value: String(clean)))
+                items.append(.init(name: "clean", value: clean.description))
+            }
+        case .setOperationRevise(let request):
+            items.append(.init(name: "tzid", value: request.operationId.description))
+        case .setOperationOk(let request):
+            items.append(.init(name: "tzid", value: "\(request.tzid)"))
+            if let ban = request.ban {
+                items.append(.init(name: "ban", value: "\(ban)"))
             }
         }
         return items
@@ -90,6 +98,10 @@ extension OnlineSimEndpoint: CustomEndpoint {
             fullPath += "/getNum.php"
         case .getState:
             fullPath += "/getState.php"
+        case .setOperationRevise:
+            fullPath += "/setOperationRevise.php"
+        case .setOperationOk:
+            fullPath += "/setOperationOk.php"
         }
         return fullPath
     }

@@ -177,4 +177,132 @@ final class OnlineSimApiTests: XCTestCase {
         
         wait(for: [expectation], timeout: 1.0)
     }
+    
+    func testSetOperationOk() async throws {
+        // Prepare response
+        let mockResponse = """
+            {
+                "response": 1,
+                "tzid": 1234
+            }
+            """
+        let responseData = mockResponse.data(using: .utf8)!
+
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            return (response, responseData)
+        }
+
+        // Call API
+        let request = SetOperationOkRequest(tzid: 1234)
+        do {
+            let response: SetOperationOkResponse = try await onlineSimApi.setOperationOk(with: request)
+            XCTAssertEqual(response.operationId, 1234, "Expected operationId in the response 1234")
+            expectation.fulfill()
+        } catch {
+            XCTFail("Error occurred: \(error)")
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1.0)
+    }
+    
+    func testSetOperationRevise() async throws {
+        // Prepare response
+        let mockResponse = """
+            {
+                "response": 1,
+                "tzid": 1234
+            }
+            """
+        let responseData = mockResponse.data(using: .utf8)!
+        
+        MockURLProtocol.requestHandler = { request in
+            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            return (response, responseData)
+        }
+        
+        // Call API
+        let request = SetOperationReviseRequest(operationId: 1234)
+        do {
+            let response: SetOperationReviseResponse = try await onlineSimApi.setOperationRevise(with: request)
+            XCTAssertEqual(response.operationId, 1234, "Expected operationId in the response 1234")
+            expectation.fulfill()
+        } catch {
+            XCTFail("Error occurred: \(error)")
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 1.0)
+    }
+    
+    func testWaitForCode() async throws {
+        // Prepare response
+        let mockResponses = [
+            """
+            [
+                {
+                    "country": 7,
+                    "sum": 0.12,
+                    "service": "iherb",
+                    "number": "+79210084813",
+                    "response": "TZ_NUM_ANSWER",
+                    "tzid": 89145058,
+                    "time": 847,
+                    "form": "index"
+                }
+            ]
+            """,
+            """
+            [
+                {
+                    "country": 7,
+                    "sum": 0.12,
+                    "service": "iherb",
+                    "number": "+79210084813",
+                    "response": "TZ_NUM_ANSWER",
+                    "tzid": 89145058,
+                    "time": 847,
+                    "form": "index"
+                }
+            ]
+            """,
+            """
+            [
+                {
+                    "country": 7,
+                    "sum": 0.12,
+                    "msg": "123456",
+                    "service": "iherb",
+                    "number": "+79210084813",
+                    "response": "TZ_NUM_ANSWER",
+                    "tzid": 89145058,
+                    "time": 847,
+                    "form": "index"
+                }
+            ]
+            """
+        ]
+        var responseIndex = 0
+
+        MockURLProtocol.requestHandler = { request in
+            let responseData = mockResponses[responseIndex].data(using: .utf8)
+            responseIndex += 1
+            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            return (response, responseData)
+        }
+
+        // Call API
+        let operationId = 89145058
+        do {
+            let code = try await onlineSimApi.waitForCode(operationId: operationId, attempts: 5, setStatusAfterCompletion: false)
+            XCTAssertEqual(code, "123456", "Expected code in the response 123456")
+            expectation.fulfill()
+        } catch {
+            XCTFail("Error occurred: \(error)")
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 10.0)
+    }
 }

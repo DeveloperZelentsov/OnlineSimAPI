@@ -9,7 +9,7 @@ import Foundation
 
 public struct GetOnlineSimStateRequest: Codable {
     public let operationId: Int?
-    public let extractCodeOnly: Int?
+    public let extractCodeOnly: Int
     public let receptionType: Int?
     public let sortOrder: String?
     public let messageType: Int?
@@ -17,7 +17,7 @@ public struct GetOnlineSimStateRequest: Codable {
     
     public init(
         operationId: Int? = nil,
-        extractCodeOnly: Int? = nil,
+        extractCodeOnly: Int = 1,
         receptionType: Int? = nil,
         sortOrder: String? = nil,
         messageType: Int? = nil,

@@ -11,6 +11,7 @@ public struct GetOnlineSimStateResponse: Codable {
     
     public let countryCode: Int
     public let cost: Double
+    public let code: String?
     public let service: String
     public let phoneNumber: String
     public let status: String
@@ -21,6 +22,7 @@ public struct GetOnlineSimStateResponse: Codable {
     enum CodingKeys: String, CodingKey {
         case countryCode = "country"
         case cost = "sum"
+        case code = "msg"
         case service
         case phoneNumber = "number"
         case status = "response"
@@ -29,7 +31,7 @@ public struct GetOnlineSimStateResponse: Codable {
         case form
     }
     
-    public init(countryCode: Int, cost: Double, service: String, phoneNumber: String, status: String, operationId: Int, timeRemaining: Int, form: String) {
+    public init(countryCode: Int, cost: Double, service: String, phoneNumber: String, status: String, operationId: Int, timeRemaining: Int, form: String, code: String) {
         self.countryCode = countryCode
         self.cost = cost
         self.service = service
@@ -38,5 +40,6 @@ public struct GetOnlineSimStateResponse: Codable {
         self.operationId = operationId
         self.timeRemaining = timeRemaining
         self.form = form
+        self.code = code
     }
 }
