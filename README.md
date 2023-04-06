@@ -2,6 +2,8 @@
 
 A Swift library that provides an easy-to-use interface for [OnlineSim](https://onlinesim.io/?ref=2541522) API services.
 
+[![Buy me a coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/zelentsov)
+
 ## Features ##
 
 * Asynchronous API calls using Swift's async/await syntax
